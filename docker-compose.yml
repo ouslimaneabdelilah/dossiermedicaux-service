@@ -1,0 +1,47 @@
+services:
+  dossier_medicaux:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: dossier_medicaux
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - dossier_medicaux_db
+    networks:
+      - dossier_medicaux-net
+
+  nginx:
+    image: nginx:alpine
+    container_name: dossier_medicaux_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - dossier_medicaux
+    networks:
+      - dossier_medicaux-net
+
+  dossier_medicaux_db:
+    image: mysql:8.0
+    container_name: dossier_medicaux_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: dossier_medicaux_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: dossier_medicaux
+      MYSQL_PASSWORD: dossier_medicaux
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - dossier_medicaux-net
+    command: --default-authentication-plugin=mysql_native_password
+
+networks:
+  dossier_medicaux-net:
+    driver: bridge
+
+volumes:
+  db_data:
