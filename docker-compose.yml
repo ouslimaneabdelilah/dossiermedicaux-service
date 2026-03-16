@@ -2,7 +2,7 @@ services:
   dossier_medicaux:
     build:
       context: .
-      dockerfile: docker/php/Dockerfile
+      dockerfile: docker/php/dockerfile
     container_name: dossier_medicaux
     volumes:
       - ./:/var/www/html
