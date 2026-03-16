@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('dossier_medical_maladies', function (Blueprint $table) {
-            $table->uuid()->primary();
-            $table->foreignId('dossier_medical_id')->constrained('dossier_medicals')->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('dossier_medical_id')->constrained('dossier_medicals')->onDelete('cascade');
             $table->unsignedBigInteger('maladie_id');
             $table->timestamps();
         });

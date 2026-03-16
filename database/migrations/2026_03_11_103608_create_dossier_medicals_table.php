@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('dossier_medicals', function (Blueprint $table) {
-            $table->uuid()->primary();
+            $table->uuid('id')->primary();
             $table->string('matricule');
-            $table->text('string');
+            $table->text('description');
             $table->unsignedBigInteger('patient_id');
             $table->timestamps();
         });
