@@ -1,0 +1,189 @@
+openapi: 3.0.0
+info:
+  title: RareCare - Dossiers Médicaux API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8001/api/v1
+paths:
+  /dossiers:
+    get:
+      summary: Get all medical dossiers
+      tags:
+        - Dossiers Médicaux
+      responses:
+        '200':
+          description: List of medical dossiers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DossierMedical'
+    post:
+      summary: Create a new medical dossier
+      tags:
+        - Dossiers Médicaux
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierMedicalStoreInput'
+      responses:
+        '201':
+          description: Medical dossier created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DossierMedical'
+        '422':
+          description: Validation error
+  /dossiers/{id}:
+    get:
+      summary: Get a single medical dossier
+      tags:
+        - Dossiers Médicaux
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Medical dossier details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DossierMedical'
+        '404':
+          description: Medical dossier not found
+    put:
+      summary: Update a medical dossier
+      tags:
+        - Dossiers Médicaux
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierMedicalUpdateInput'
+      responses:
+        '200':
+          description: Medical dossier updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DossierMedical'
+        '404':
+          description: Medical dossier not found
+    delete:
+      summary: Delete a medical dossier
+      tags:
+        - Dossiers Médicaux
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Medical dossier deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Medical dossier not found
+  /dossiers/{id}/pdf:
+    get:
+      summary: Download patient report as PDF
+      tags:
+        - Dossiers Médicaux
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: PDF Report
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Dossier not found
+
+components:
+  schemas:
+    DossierMedical:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        matricule:
+          type: string
+        description:
+          type: string
+        patient_id:
+          type: string
+          format: uuid
+        maladie_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    DossierMedicalStoreInput:
+      type: object
+      properties:
+        description:
+          type: string
+          minLength: 20
+        patient_id:
+          type: string
+          format: uuid
+        maladie_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+      required:
+        - description
+        - patient_id
+        - maladie_ids
+    DossierMedicalUpdateInput:
+      type: object
+      properties:
+        description:
+          type: string
+          minLength: 20
+        maladie_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
