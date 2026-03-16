@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DossierMedical extends Model
 {
@@ -16,13 +16,8 @@ class DossierMedical extends Model
         'description',
         'patient_id',
     ];
-    public function maladies():BelongsToMany
+    public function maladies(): HasMany
     {
-       return $this->belongsToMany(
-        DossierMedical::class,
-        'dossier_medical_maladies', 
-        'dossier_medical_id', 
-        'maladie_id'
-    );
+        return $this->hasMany(DossierMedicalMaladie::class, 'dossier_medical_id');
     }
 }
