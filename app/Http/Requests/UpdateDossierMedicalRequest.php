@@ -24,7 +24,7 @@ class UpdateDossierMedicalRequest extends FormRequest
         return [
             'description' => 'sometimes|string|min:20',
             'maladie_ids' => 'sometimes|array',
-            'maladie_ids.*' => 'uuid',
+            'maladie_ids.*' => 'int',
         ];
     }
 

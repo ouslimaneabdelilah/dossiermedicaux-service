@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DossierMedicalMaladie extends Model
 {
-    use HasFactory,HasUuids;
+    use HasFactory;
     protected $fillable = [
         'dossier_medical_id',
         'maladie_id',

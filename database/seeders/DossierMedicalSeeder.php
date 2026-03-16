@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\DossierMedical;
 use App\Models\DossierMedicalMaladie;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DossierMedicalSeeder extends Seeder
 {
@@ -17,14 +18,11 @@ class DossierMedicalSeeder extends Seeder
             ->count(25)
             ->create()
             ->each(function (DossierMedical $dossier): void {
-                $maladieIds = collect(range(1, fake()->numberBetween(1, 4)))
-                    ->map(fn (): int => fake()->numberBetween(1, 50))
-                    ->unique();
-
-                foreach ($maladieIds as $maladieId) {
+                $nombreDeMaladies = fake()->numberBetween(1, 4);
+                  for ($i = 0; $i < $nombreDeMaladies; $i++) {
                     DossierMedicalMaladie::create([
                         'dossier_medical_id' => $dossier->id,
-                        'maladie_id' => $maladieId,
+                        'maladie_id'         => fake()->numberBetween(1, 2000),
                     ]);
                 }
             });

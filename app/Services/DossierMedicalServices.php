@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Models\DossierMedical;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class DossierMedicalServices{
     // public function __construct(protected RabbitMQService $mq) {}
@@ -11,12 +12,14 @@ class DossierMedicalServices{
     {
         return DB::transaction(function () use ($data) {
             $dossier = DossierMedical::create([
-                'matricule'   => 'DM-' . date('Y') . '-' . strtoupper(\Illuminate\Support\Str::random(6)),
+                'matricule'   => 'DM-' . date('Y') . '-' . strtoupper(Str::random(6)),
                 'description' => $data['description'],
                 'patient_id'  => $data['patient_id'],
             ]);
             if (isset($data['maladie_ids'])) {
-                $dossier->maladies()->sync($data['maladie_ids']);
+                $dossier->maladies()->delete();
+                $maladies = array_map(fn($id) => ['maladie_id' => $id], $data['maladie_ids']);
+                $dossier->maladies()->createMany($maladies);
             }
             return $dossier;
         });
@@ -28,7 +31,9 @@ class DossierMedicalServices{
             $dossier = DossierMedical::findOrFail($uuid);
             $dossier->update($data);
             if (isset($data['maladie_ids'])) {
-                $dossier->maladies()->sync($data['maladie_ids']);
+                $dossier->maladies()->delete();
+                $maladies = array_map(fn($id) => ['maladie_id' => $id], $data['maladie_ids']);
+                $dossier->maladies()->createMany($maladies);
             }
             return $dossier;
         });

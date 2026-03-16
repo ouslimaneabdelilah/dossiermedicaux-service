@@ -23,9 +23,9 @@ class StoreDossierMedicalRequest extends FormRequest
     {
         return [
             'description' => 'required|string|min:20',
-            'patient_id'  => 'required|uuid',
+            'patient_id'  => 'required|int',
             'maladie_ids' => 'required|array|min:1',
-            'maladie_ids.*' => 'uuid',
+            'maladie_ids.*' => 'int',
         ];
     }
 
@@ -35,7 +35,7 @@ class StoreDossierMedicalRequest extends FormRequest
             'description.required' => 'La description du dossier médical est obligatoire.',
             'description.min'      => 'La description doit contenir au moins 20 caractères.',
             'patient_id.required'  => "L'identifiant du patient est requis.",
-            'patient_id.uuid'      => "L'identifiant du patient doit être un UUID valide.",
+            'patient_id.int'      => "L'identifiant du patient doit être un int valide.",
             'maladie_ids.required' => 'Veuillez associer au moins une maladie à ce dossier.',
         ];
     }
