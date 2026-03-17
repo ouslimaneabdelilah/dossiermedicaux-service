@@ -8,10 +8,11 @@ use App\Http\Requests\UpdateDossierMedicalRequest;
 use App\Http\Resources\Api\v1\DossierMedicalResource;
 use App\Models\DossierMedical;
 use App\Services\DossierMedicalServices;
+use App\Service\RabbitMQPublisherService;
 
 class DossierMedicalController extends Controller
 {
-    public function __construct(protected DossierMedicalServices $service) {}
+    public function __construct(protected DossierMedicalServices $service, private RabbitMQPublisherService $rabbitPublisherService) {}
     /**
      * Display a listing of the resource.
      */
@@ -54,9 +55,12 @@ class DossierMedicalController extends Controller
      */
     public function destroy(DossierMedical $dossierMedical)
     {
+        $data = $dossierMedical->toArray();
         $this->service->delete($dossierMedical->id);
+        $this->rabbitPublisherService->publish($data, 'folder.deleted');
         return response()->json(['message' => 'Dossier supprimé avec succès'], 200);
     }
+    
 
     public function downloadPdf(DossierMedical $dossierMedical)
     {
