@@ -54,9 +54,8 @@ class DossierMedicalController extends Controller
      */
     public function destroy(DossierMedical $dossierMedical)
     {
-        $data = $dossierMedical->toArray();
         $this->service->delete($dossierMedical->id);
-        $this->rabbitPublisherService->publish($data, 'folder.deleted');
+        $this->rabbitPublisherService->publish(['dossier_id' => $dossierMedical->id], 'folder.deleted');
         return response()->json(['message' => 'Dossier supprimé avec succès'], 200);
     }
 
