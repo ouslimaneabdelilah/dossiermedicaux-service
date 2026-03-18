@@ -16,11 +16,8 @@ class SyncPatientJob extends RabbitMQJob{
     public function fire(): void{
         $folderService = $this->container->make(DossierMedicalServices::class);
         try{
-            $raw = json_decode($this->getRawBody(), true);
+            $payload = json_decode($this->getRawBody(), true);
             $routingKey = $this->getRabbitMQMessage()->delivery_info['routing_key'] ?? '';
-
-            $body = $raw['body'] ?? null;
-            $payload = is_string($body) ? (json_decode($body, true) ?? $raw) : ($body ?? $raw);
 
             match($routingKey){
                 'patient.created' => $folderService->store($payload),
