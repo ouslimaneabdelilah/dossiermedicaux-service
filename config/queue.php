@@ -63,6 +63,7 @@ return [
                     'auto_delete' => false,
                 ],
                 'queue' => [
+                    'name' => env('RABBITMQ_QUEUE', 'patients_events_queue'),
                     'job' => App\Jobs\SyncPatientJob::class,
                     'declare' => true,
                     'durable' => true,

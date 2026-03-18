@@ -11,24 +11,20 @@ use Illuminate\Support\Str;
 class SyncPatientJob extends RabbitMQJob{
 
     /**
-     * Create a new job instance.
-     */
-    public function __construct(private DossierMedicalServices $folderService){}
-
-    /**
      * Execute the job.
      */
     public function fire(): void{
+        $folderService = $this->container->make(DossierMedicalServices::class);
         try{
             $raw = json_decode($this->getRawBody(), true);
             $routingKey = $this->getRabbitMQMessage()->delivery_info['routing_key'] ?? '';
 
             $body = $raw['body'] ?? null;
             $payload = is_string($body) ? (json_decode($body, true) ?? $raw) : ($body ?? $raw);
-            
+
             match($routingKey){
-                'patient.created' => $this->folderService->store($payload),
-                'patient.deleted' => $this->folderService->deleteByPatientUuid($payload['patient_id']),
+                'patient.created' => $folderService->store($payload),
+                'patient.deleted' => $folderService->deleteByPatientUuid($payload['patient_id']),
                 default => Log::warning("Dossier service recieved an event with unknown routing key $routingKey")
             };
             $this->delete();

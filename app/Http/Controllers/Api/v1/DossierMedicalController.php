@@ -8,7 +8,7 @@ use App\Http\Requests\UpdateDossierMedicalRequest;
 use App\Http\Resources\Api\v1\DossierMedicalResource;
 use App\Models\DossierMedical;
 use App\Services\DossierMedicalServices;
-use App\Service\RabbitMQPublisherService;
+use App\Services\RabbitMQPublisherService;
 
 class DossierMedicalController extends Controller
 {
@@ -26,8 +26,7 @@ class DossierMedicalController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreDossierMedicalRequest $request)
-    {
+    public function store(StoreDossierMedicalRequest $request) {
         $dossier = $this->service->store($request->validated());
         return (new DossierMedicalResource($dossier->load('maladies')))
             ->response()->setStatusCode(201);
@@ -60,7 +59,7 @@ class DossierMedicalController extends Controller
         $this->rabbitPublisherService->publish($data, 'folder.deleted');
         return response()->json(['message' => 'Dossier supprimé avec succès'], 200);
     }
-    
+
 
     public function downloadPdf(DossierMedical $dossierMedical)
     {
