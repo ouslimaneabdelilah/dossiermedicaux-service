@@ -37,8 +37,8 @@ class SyncPatientJob extends RabbitMQJob{
     public function payload(){
         return [
             'uuid'        => Str::uuid()->toString(),
-            'displayName' => 'NotificationJob',
-            'job'         => 'SyncPatientJob',
+            'displayName' => self::class,
+            'job'         => self::class,
             'data'        => [],
         ];
     }
