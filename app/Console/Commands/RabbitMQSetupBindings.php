@@ -6,8 +6,10 @@ use Illuminate\Console\Command;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
 
-class RabbitMQSetupBingdings extends Command
+class RabbitMQSetupBindings extends Command
 {
+
+    
     /**
      * The name and signature of the console command.
      *
